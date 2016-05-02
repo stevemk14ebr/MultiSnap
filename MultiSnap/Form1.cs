@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -133,27 +134,17 @@ namespace MultiSnap
             for(int i=0;i<SnapBlocks.Count; i++)
             {
                 SnapBlock Block = SnapBlocks[i];
-                if (!ShowRuleIndividually)
-                {
-                    PointF Pos = Block.PercentPos * new PointF(width, height);
-                    PointF Size = Block.PercentSize * new PointF(width, height);
-                    PointF Pos2 = Block.DestPercentPos * new PointF(width, height);
-                    PointF Size2 = Block.DestPercentSize * new PointF(width, height);
-
-                    e.Graphics.DrawRectangle(Black, Pos.X, Pos.Y, Size.X, Size.Y);
-                    e.Graphics.DrawRectangle(Green, Pos2.X, Pos2.Y, Size2.X, Size2.Y);
-                }else {
+                if (ShowRuleIndividually)
                     if (i != RuleSelectionCombo.SelectedIndex)
                         continue;
 
-                    PointF Pos = Block.PercentPos * new PointF(width, height);
-                    PointF Size = Block.PercentSize * new PointF(width, height);
-                    PointF Pos2 = Block.DestPercentPos * new PointF(width, height);
-                    PointF Size2 = Block.DestPercentSize * new PointF(width, height);
+                PointF Pos = Block.PercentPos * new PointF(width, height);
+                PointF Size = Block.PercentSize * new PointF(width, height);
+                PointF Pos2 = Block.DestPercentPos * new PointF(width, height);
+                PointF Size2 = Block.DestPercentSize * new PointF(width, height);
 
-                    e.Graphics.DrawRectangle(Black, Pos.X, Pos.Y, Size.X, Size.Y);
-                    e.Graphics.DrawRectangle(Green, Pos2.X, Pos2.Y, Size2.X, Size2.Y);
-                }
+                e.Graphics.DrawRectangle(Black, Pos.X, Pos.Y, Size.X, Size.Y);
+                e.Graphics.DrawRectangle(Green, Pos2.X, Pos2.Y, Size2.X, Size2.Y);
             }
         }
 
@@ -226,6 +217,7 @@ namespace MultiSnap
         private void Form1_Load(object sender, EventArgs e)
         {
             notifyIcon1.Icon = ((System.Drawing.Icon)(MultiSnap.Properties.Resources.Icon));
+            StartupChk.Checked = GetStartupKey();
             try
             {
                 XmlSerializer serializer = new XmlSerializer(SnapBlocks.GetType(),new XmlRootAttribute("SnapBlockArray"));
@@ -275,6 +267,33 @@ namespace MultiSnap
                 notifyIcon1.ShowBalloonTip(1000);
                 this.ShowInTaskbar = false;
             }
+        }
+
+        private void SetStartupKey(bool isChecked)
+        {
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            
+            if (isChecked)
+            {
+                registryKey.SetValue("MultiSnap", Application.ExecutablePath);
+            }
+            else
+            {
+                registryKey.DeleteValue("MultiSnap");
+            }
+        }
+
+        private bool GetStartupKey()
+        {
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            return (registryKey.GetValue("MultiSnap") == null ? false : true) ;
+        }
+
+        private void StartupChk_CheckedChanged(object sender, EventArgs e)
+        {
+            SetStartupKey(StartupChk.Checked);
         }
     }
 }

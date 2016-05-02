@@ -39,13 +39,14 @@
             this.RuleSelectionCombo = new System.Windows.Forms.ComboBox();
             this.RulesIndividChk = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.StartupChk = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.OpacitySlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SnapPreviewPicBox)).BeginInit();
             this.SuspendLayout();
             // 
             // OpacitySlider
             // 
-            this.OpacitySlider.Location = new System.Drawing.Point(12, 352);
+            this.OpacitySlider.Location = new System.Drawing.Point(12, 349);
             this.OpacitySlider.Maximum = 100;
             this.OpacitySlider.Minimum = 30;
             this.OpacitySlider.Name = "OpacitySlider";
@@ -76,7 +77,7 @@
             // Overlaylbl
             // 
             this.Overlaylbl.AutoSize = true;
-            this.Overlaylbl.Location = new System.Drawing.Point(71, 342);
+            this.Overlaylbl.Location = new System.Drawing.Point(31, 339);
             this.Overlaylbl.Name = "Overlaylbl";
             this.Overlaylbl.Size = new System.Drawing.Size(111, 13);
             this.Overlaylbl.TabIndex = 3;
@@ -142,11 +143,23 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // StartupChk
+            // 
+            this.StartupChk.AutoSize = true;
+            this.StartupChk.Location = new System.Drawing.Point(23, 376);
+            this.StartupChk.Name = "StartupChk";
+            this.StartupChk.Size = new System.Drawing.Size(120, 17);
+            this.StartupChk.TabIndex = 9;
+            this.StartupChk.Text = "Start With Windows";
+            this.StartupChk.UseVisualStyleBackColor = true;
+            this.StartupChk.CheckedChanged += new System.EventHandler(this.StartupChk_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 399);
+            this.Controls.Add(this.StartupChk);
             this.Controls.Add(this.RulesIndividChk);
             this.Controls.Add(this.RuleSelectionCombo);
             this.Controls.Add(this.ClearSnapsBtn);
@@ -180,6 +193,7 @@
         private System.Windows.Forms.ComboBox RuleSelectionCombo;
         private System.Windows.Forms.CheckBox RulesIndividChk;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.CheckBox StartupChk;
     }
 }
 
