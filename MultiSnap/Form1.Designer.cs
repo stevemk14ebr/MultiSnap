@@ -157,7 +157,6 @@
             // 
             // cursorTimer
             // 
-            this.cursorTimer.Enabled = true;
             this.cursorTimer.Interval = 200;
             this.cursorTimer.Tick += new System.EventHandler(this.cursorTimer_Tick);
             // 
