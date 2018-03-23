@@ -40,6 +40,7 @@
             this.RulesIndividChk = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.StartupChk = new System.Windows.Forms.CheckBox();
+            this.cursorTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.OpacitySlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SnapPreviewPicBox)).BeginInit();
             this.SuspendLayout();
@@ -154,6 +155,12 @@
             this.StartupChk.UseVisualStyleBackColor = true;
             this.StartupChk.CheckedChanged += new System.EventHandler(this.StartupChk_CheckedChanged);
             // 
+            // cursorTimer
+            // 
+            this.cursorTimer.Enabled = true;
+            this.cursorTimer.Interval = 200;
+            this.cursorTimer.Tick += new System.EventHandler(this.cursorTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -194,6 +201,7 @@
         private System.Windows.Forms.CheckBox RulesIndividChk;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.CheckBox StartupChk;
+        private System.Windows.Forms.Timer cursorTimer;
     }
 }
 

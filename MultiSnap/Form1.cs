@@ -6,8 +6,10 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -20,6 +22,27 @@ namespace MultiSnap
     {
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, uint wFlags);
+
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
+        public static extern bool SetCursorPos(int X, int Y);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;        // x position of upper-left corner  
+            public int Top;         // y position of upper-left corner  
+            public int Right;       // x position of lower-right corner  
+            public int Bottom;      // y position of lower-right corner  
+        }
+
+        KeyboardHook kybd = new KeyboardHook();
 
         List<SnapBlock> SnapBlocks = new List<SnapBlock>();
         ResizeEventHook ResizeHook = new ResizeEventHook();
@@ -54,6 +77,9 @@ namespace MultiSnap
             InitializeComponent();
             ResizeEventHook.OnResizeEvent += fResizeCallback;
             ResizeHook.Hook();
+
+            kybd.KeyPressed += new EventHandler<KeyPressedEventArgs>(hotkeyPressed);
+            kybd.RegisterHotKey(MultiSnap.ModifierKeys.Alt, Keys.M);
         }
 
         public void CalcRectSize(PointF Point1,PointF Point2,out PointF Pos,out PointF Size)
@@ -294,6 +320,30 @@ namespace MultiSnap
         private void StartupChk_CheckedChanged(object sender, EventArgs e)
         {
             SetStartupKey(StartupChk.Checked);
+        }
+
+        private IntPtr GetActiveWindow()
+        {
+            IntPtr handle = IntPtr.Zero;
+            return GetForegroundWindow();
+        }
+
+        private void cursorTimer_Tick(object sender, EventArgs e)
+        {
+            IntPtr foreWindow = GetActiveWindow();
+            if (foreWindow == IntPtr.Zero)
+                return;
+
+            RECT rect;
+            bool status = GetWindowRect(foreWindow, out rect);
+            Console.WriteLine(rect.Left + " " + rect.Right);
+
+            SetCursorPos((rect.Left + rect.Right) / 2, (rect.Top + rect.Bottom) / 2);
+        }
+
+        private void hotkeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            cursorTimer.Enabled = !cursorTimer.Enabled;
         }
     }
 }
